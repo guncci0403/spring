@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="users">
+<!-- sql문 끝에 ; 찍으면 에러 -->
+<!-- select 된 컬럼과 resultType에 기술된 클래스의 필드 이름이 동일하면 자동으로 값을 넣어준다 -->
+<!-- resultType : 한 행의 정보를 저장할 수 있는 클래스 타입을 명시 -->
+  <select id="selectAllUser" resultType="userVo">
+    SELECT *
+    FROM users
+  </select>
+  
+  <select id="selectUser" resultType="userVo" parameterType="String">
+    SELECT *
+    FROM users
+    WHERE userid = #{value}
+  </select>
+  
+<!--   정규직 vs 프리랜서 -->
+<!--   valueObject vs Map -->
+<!-- 타입 알리아스 지정이 ibatis에서는 매퍼에서 가능했지만 mybatis에서는 config에서 가능 -->
+	<select id="selectPagingUser" resultType="userVo"
+								  parameterType="pageVo">
+		SELECT *
+		FROM 
+		(SELECT ROWNUM rn, a.*
+		 FROM
+		    (SELECT *
+		     FROM users
+		     ORDER BY userid) a
+		 WHERE ROWNUM &lt;= #{page} * #{pageSize})
+		WHERE rn BETWEEN (#{page}-1) * #{pageSize} + 1 AND #{page} * #{pageSize}
+	</select>  
+  
+  	<!-- 전체 사용자 수 조회 -->
+  	<select id="selectAllUserCnt" resultType="int">
+   		SELECT COUNT(*)
+    	FROM users
+  	</select>
+  	
+  	<!-- 사용자 정보 수정 -->
+  	<update id="modifyUser" parameterType="userVo">
+	  	UPDATE users SET usernm = #{usernm},
+	                 pass = #{pass},
+	                 alias = #{alias},
+	                 addr1 = #{addr1},
+	                 addr2 = #{addr2},
+	                 zipcode = #{zipcode},
+	                 filename = #{filename},
+	                 realfilename = #{realfilename}
+		WHERE userid = #{userid}
+  	</update>
+  	
+  	<!-- 사용자 정보 등록 -->
+  	<insert id="registUser" parameterType="userVo">
+  		INSERT INTO users 
+  			   	   (userid, usernm, pass, reg_dt, alias, addr1, addr2, zipcode, filename, realfilename)
+  			VALUES (#{userid}, #{usernm}, #{pass}, #{reg_dt}, #{alias}, #{addr1}, #{addr2}, #{zipcode}, #{filename}, #{realfilename})
+  	</insert>
+  	
+  	<!-- 사용자 삭제 -->
+  	<delete id="deleteUser" parameterType="string">
+  		DELETE users
+  		WHERE userid = #{value}
+  	</delete>
+</mapper>
+
+
+
+
+
+
+

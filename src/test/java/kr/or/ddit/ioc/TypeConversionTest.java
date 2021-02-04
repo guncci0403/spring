@@ -9,11 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import kr.or.ddit.test.config.WebTestConfig;
 import kr.or.ddit.user.model.UserVo;
 
-@ContextConfiguration("classpath:/kr/or/ddit/ioc/typeConversion.xml")
+@ContextConfiguration(locations = {"classpath:/kr/or/ddit/ioc/typeConversion.xml",
+								"classpath:/kr/or/ddit/config/spring/datasource-context.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TypeConversionTest {
+public class TypeConversionTest{
 	
 	private static final Logger logger = LoggerFactory.getLogger(TypeConversionTest.class);
 	

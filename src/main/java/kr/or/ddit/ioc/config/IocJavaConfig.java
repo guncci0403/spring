@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 
@@ -18,6 +19,7 @@ import kr.or.ddit.user.service.UserServiceImpl;
 
 //스프링 프레임워크에게 해당 자바 파일이
 //스프링 설정 파일임을 알려준다
+@ImportResource("classpath:/kr/or/ddit/config/spring/datasource-context.xml")
 @PropertySource(value = {"classpath:kr/or/ddit/config/db/dbinfo.properties"})
 @Configuration
 public class IocJavaConfig {

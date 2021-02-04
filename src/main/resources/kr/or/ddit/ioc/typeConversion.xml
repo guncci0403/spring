@@ -19,6 +19,6 @@
 		</property>
 	</bean> -->
 	
-	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
 	
 </beans>
