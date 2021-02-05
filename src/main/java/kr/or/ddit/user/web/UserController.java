@@ -70,6 +70,7 @@ public class UserController {
 		
 		return "user/pagingUser";
 	}
+	
 	@RequestMapping("pagingUserTiles")
 	public String pagingUserTiles(@RequestParam(defaultValue = "1") int page,
 								@RequestParam(defaultValue = "5") int pageSize,
@@ -81,6 +82,39 @@ public class UserController {
 		
 		return "tiles.user.pagingUser";
 	}
+	
+	//사용자 리스트 없는 상태의 화면만 응답으로 생성
+	@RequestMapping("pagingUserAjaxView")
+	public String pagingUserAjaxView() {
+		return "tiles.user.pagingUserAjax";
+	}
+	
+	@RequestMapping("pagingUserAjax")
+	public String pagingUserAjax(@RequestParam(defaultValue = "1") int page,
+								@RequestParam(defaultValue = "5") int pageSize,
+								Model model) {
+		
+		PageVo pageVo  = new PageVo(page, pageSize);
+		
+		model.addAllAttributes(userService.selectPagingUser(pageVo));
+		
+		return "jsonView";
+	}
+	
+	@RequestMapping("pagingUserAjaxHtml")
+	public String pagingUserAjaxHtml(@RequestParam(defaultValue = "1") int page,
+								@RequestParam(defaultValue = "5") int pageSize,
+								Model model) {
+		
+		PageVo pageVo  = new PageVo(page, pageSize);
+		
+		model.addAllAttributes(userService.selectPagingUser(pageVo));
+		
+		return "user/pagingUserAjaxHtml";
+	}
+	/*
+	 * pagingUserAjaxHtml ==> /WEB-INF/views/user/pagingUserAjaxHtml.jsp
+	 */
 	
 	//@RequestMapping("pagingUser")
 	public String pagingUser(PageVo pageVo) {
@@ -330,6 +364,7 @@ public class UserController {
 			e.printStackTrace();
 		}
 	}
+
 }
 
 
