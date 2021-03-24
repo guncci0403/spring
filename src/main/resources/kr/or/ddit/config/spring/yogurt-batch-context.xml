@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<context:annotation-config/>
+	
+	 <context:property-placeholder 
+	 		location="classpath:/kr/or/ddit/config/db/dbinfo.properties"/>
+	 
+	 <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+	 	<property name="driverClassName" value="${jdbc.driverClassName}"/>
+	 	<property name="url" value="${jdbc.url}"/>
+	 	<property name="username" value="${jdbc.username}"/>
+	 	<property name="password" value="${jdbc.password}"/>
+	 	<property name="initialSize" value="3"/>
+	 </bean>
+
+ 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	 	<property name="configLocation" value="classpath:/kr/or/ddit/config/mybatis/mybatis-config.xml"/>
+	 	<property name="dataSource" ref="dataSource"/>
+	 </bean>
+	
+	 <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+	 	<constructor-arg ref="sqlSessionFactory"/>
+	 </bean>
+
+	 
+	 <!-- yogurt reader, processor, writer  -->
+	 <bean id="yogurtReader" class="org.mybatis.spring.batch.MyBatisCursorItemReader">
+	 	<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	 	<property name="queryId" value="yogurt.selectCycle"/>
+	 </bean>
+	 
+	 <!-- jobParameter를 주입받기 위해 scope를 step으로 등록 -->
+	 <bean id="yogurtProcessor" class="kr.or.ddit.batch.yogurt.YogurtProcessor"
+	 		scope="step"/>
+	 
+	 <bean id="yogurtWriter" class="kr.or.ddit.batch.yogurt.CustomMybatisBatchItemWriter">
+	 	<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	 	<property name="statementId" value="yogurt.insertDaily"/>
+	 </bean>
+	 
+	 <bean id="jobRepository" 
+	 	class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean"/>
+	 
+	 <bean id="jobLauncher" 
+	 		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+	 	<property name="jobRepository" ref="jobRepository"/>	
+	 </bean>
+	 
+	 <bean id="transactionManager" 
+	 		class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"/>
+	 
+	 <batch:job id="yogurtJob" >
+	 	<batch:step id="yogurtStep">
+	 		<batch:tasklet>
+	 			<batch:chunk commit-interval="1" 
+	 						 reader="yogurtReader" 
+	 						 processor="yogurtProcessor" 
+	 						 writer="yogurtWriter"/>
+	 		</batch:tasklet>
+	 	</batch:step>
+	 </batch:job> 
+	 
+	 
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+

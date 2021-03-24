@@ -6,10 +6,14 @@
 <typeAliases>
 	<typeAlias type="kr.or.ddit.user.model.UserVo" alias="userVo"/>
 	<typeAlias type="kr.or.ddit.common.model.PageVo" alias="pageVo"/>
+ 	<typeAlias type="kr.or.ddit.yogurt.model.CycleVo" alias="cycleVo"/>
+	<typeAlias type="kr.or.ddit.yogurt.model.DailyVo" alias="dailyVo"/> 
+	
 </typeAliases>
 
 
   <mappers>
     <mapper resource="kr/or/ddit/config/mybatis/mapper/users.xml"/>
+    <!-- <mapper resource="kr/or/ddit/config/mybatis/mapper/yogurt.xml"/> -->
   </mappers>
 </configuration>
